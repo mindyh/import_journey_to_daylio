@@ -167,7 +167,7 @@ def write_daylio(daylio: dict, assets_dir: Path, output_path: Path) -> None:
         zf.writestr("backup.daylio", encoded)
         for asset_file in asset_files:
             rel = asset_file.relative_to(assets_dir)
-            zf.write(asset_file, "/assets/" + rel.as_posix())
+            zf.write(asset_file, "assets/" + rel.as_posix())
 
     size_mb = output_path.stat().st_size / (1024 * 1024)
     print(f"\nWrote {output_path.name}  ({size_mb:.2f} MB)")
@@ -333,11 +333,13 @@ def convert_folder(
             original_name = photo_path.name
             if asset_type == 1:
                 metadata = json.dumps(
-                    {"Name": original_name, "LastModified": ts_ms, "Orientation": 0}
+                    {"Name": original_name, "LastModified": ts_ms, "Orientation": 0},
+                    separators=(",", ":")
                 )
             else:
                 metadata = json.dumps(
-                    {"Name": original_name, "LastModified": ts_ms}
+                    {"Name": original_name, "LastModified": ts_ms},
+                    separators=(",", ":")
                 )
 
             asset_record = {
